@@ -1,0 +1,340 @@
+
+TKPROF: Release 11.2.0.1.0 - Development on Wed Jul 7 14:24:32 2010
+
+Copyright (c) 1982, 2009, Oracle and/or its affiliates.  All rights reserved.
+
+Trace file: /home/ora11gr2/app/ora11gr2/diag/rdbms/orcl/orcl/trace/orcl_ora_12187.trc
+Sort options: default
+
+********************************************************************************
+count    = number of times OCI procedure was executed
+cpu      = cpu time in seconds executing 
+elapsed  = elapsed time in seconds executing
+disk     = number of physical reads of buffers from disk
+query    = number of buffers gotten for consistent read
+current  = number of buffers gotten in current mode (usually for update)
+rows     = number of rows processed by the fetch or execute call
+********************************************************************************
+
+SQL ID: 9babjv8yq8ru3
+Plan Hash: 0
+BEGIN DBMS_OUTPUT.GET_LINES(:LINES, :NUMLINES); END;
+
+
+call     count       cpu    elapsed       disk      query    current        rows
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+Parse        6      0.00       0.00          0          0          0           0
+Execute      6      0.00       0.01          0          0          0           6
+Fetch        0      0.00       0.00          0          0          0           0
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+total       12      0.00       0.01          0          0          0           6
+
+Misses in library cache during parse: 0
+Optimizer mode: ALL_ROWS
+Parsing user id: 92  
+
+Elapsed times include waiting on following events:
+  Event waited on                             Times   Max. Wait  Total Waited
+  ----------------------------------------   Waited  ----------  ------------
+  SQL*Net message to client                       6        0.00          0.00
+  SQL*Net message from client                     6        9.00         11.49
+********************************************************************************
+
+SQL ID: 8r8b2pyy9qjm2
+Plan Hash: 0
+alter session set events '10046 trace name context forever, level 12'
+
+
+call     count       cpu    elapsed       disk      query    current        rows
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+Parse        1      0.00       0.00          0          0          0           0
+Execute      1      0.00       0.00          0          0          0           0
+Fetch        0      0.00       0.00          0          0          0           0
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+total        2      0.00       0.00          0          0          0           0
+
+Misses in library cache during parse: 0
+Parsing user id: 92  
+
+Elapsed times include waiting on following events:
+  Event waited on                             Times   Max. Wait  Total Waited
+  ----------------------------------------   Waited  ----------  ------------
+  SQL*Net message to client                       1        0.00          0.00
+  SQL*Net message from client                     1        0.00          0.00
+********************************************************************************
+
+select *
+  from (select *
+          from big_table.big_table
+         order by object_id) where rownum <= 10
+
+call     count       cpu    elapsed       disk      query    current        rows
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+Parse        1      0.00       0.00          0          0          0           0
+Execute      1      0.00       0.00          0          0          0           0
+Fetch        2      0.00       0.00         12         14          0          10
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+total        4      0.00       0.00         12         14          0          10
+
+Misses in library cache during parse: 1
+Optimizer mode: ALL_ROWS
+Parsing user id: 92  
+
+Rows     Row Source Operation
+-------  ---------------------------------------------------
+     10  COUNT STOPKEY (cr=14 pr=12 pw=0 time=0 us)
+     10   VIEW  (cr=14 pr=12 pw=0 time=0 us cost=13 size=1410 card=10)
+     10    TABLE ACCESS BY INDEX ROWID BIG_TABLE (cr=14 pr=12 pw=0 time=0 us cost=13 size=99000000 card=1000000)
+     10     INDEX FULL SCAN BT_IDX (cr=4 pr=2 pw=0 time=108 us cost=3 size=0 card=10)(object id 83556)
+
+
+Elapsed times include waiting on following events:
+  Event waited on                             Times   Max. Wait  Total Waited
+  ----------------------------------------   Waited  ----------  ------------
+  SQL*Net message to client                       2        0.00          0.00
+  db file sequential read                        12        0.00          0.00
+  SQL*Net message from client                     2        0.00          0.00
+********************************************************************************
+
+SQL ID: dyk4dprp70d74
+Plan Hash: 1388734953
+SELECT DECODE('A','A','1','2') 
+FROM
+ DUAL
+
+
+call     count       cpu    elapsed       disk      query    current        rows
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+Parse        2      0.00       0.00          0          0          0           0
+Execute      2      0.00       0.00          0          0          0           0
+Fetch        2      0.00       0.00          0          0          0           2
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+total        6      0.00       0.00          0          0          0           2
+
+Misses in library cache during parse: 1
+Optimizer mode: ALL_ROWS
+Parsing user id: 92  
+
+Rows     Row Source Operation
+-------  ---------------------------------------------------
+      1  FAST DUAL  (cr=0 pr=0 pw=0 time=0 us cost=2 size=0 card=1)
+
+
+Elapsed times include waiting on following events:
+  Event waited on                             Times   Max. Wait  Total Waited
+  ----------------------------------------   Waited  ----------  ------------
+  SQL*Net message to client                       3        0.00          0.00
+  SQL*Net message from client                     3        0.00          0.00
+********************************************************************************
+
+declare
+   cursor c is
+      select * from big_table.big_table order by object_id;
+   l_rec big_table.big_table%rowtype;
+begin
+   open c;
+   for i in 1 .. 10
+   loop
+       fetch c into l_rec;
+   end loop;
+   close c;
+end;
+
+call     count       cpu    elapsed       disk      query    current        rows
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+Parse        1      0.00       0.01          0          0          0           0
+Execute      1      0.00       0.00          0          0          0           1
+Fetch        0      0.00       0.00          0          0          0           0
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+total        2      0.00       0.01          0          0          0           1
+
+Misses in library cache during parse: 1
+Optimizer mode: ALL_ROWS
+Parsing user id: 92  
+
+Elapsed times include waiting on following events:
+  Event waited on                             Times   Max. Wait  Total Waited
+  ----------------------------------------   Waited  ----------  ------------
+  SQL*Net message to client                       1        0.00          0.00
+  SQL*Net message from client                     1        0.00          0.00
+********************************************************************************
+
+SQL ID: 33mc9sp91uamk
+Plan Hash: 1472477105
+SELECT * 
+FROM
+ BIG_TABLE.BIG_TABLE ORDER BY OBJECT_ID
+
+
+call     count       cpu    elapsed       disk      query    current        rows
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+Parse        1      0.00       0.00          0          0          0           0
+Execute      2      0.00       0.00          0          0          0           0
+Fetch       10      3.76       7.94      14827      14512         12          10
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+total       13      3.76       7.94      14827      14512         12          10
+
+Misses in library cache during parse: 1
+Optimizer mode: ALL_ROWS
+Parsing user id: 92     (recursive depth: 1)
+
+Rows     Row Source Operation
+-------  ---------------------------------------------------
+     10  SORT ORDER BY (cr=14512 pr=14827 pw=14612 time=0 us cost=26495 size=99000000 card=1000000)
+1000000   TABLE ACCESS FULL BIG_TABLE (cr=14512 pr=14508 pw=0 time=5222700 us cost=3991 size=99000000 card=1000000)
+
+
+Elapsed times include waiting on following events:
+  Event waited on                             Times   Max. Wait  Total Waited
+  ----------------------------------------   Waited  ----------  ------------
+  asynch descriptor resize                        6        0.00          0.00
+  direct path read                              918        0.00          0.18
+  direct path write temp                        554        0.10          4.13
+  direct path read temp                          11        0.00          0.00
+********************************************************************************
+
+SQL ID: a5ks9fhw2v9s1
+Plan Hash: 272002086
+select * 
+from
+ dual
+
+
+call     count       cpu    elapsed       disk      query    current        rows
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+Parse        1      0.00       0.00          0          0          0           0
+Execute      1      0.00       0.00          0          0          0           0
+Fetch        2      0.00       0.00          2          3          0           1
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+total        4      0.00       0.00          2          3          0           1
+
+Misses in library cache during parse: 1
+Optimizer mode: ALL_ROWS
+Parsing user id: 92  
+
+Rows     Row Source Operation
+-------  ---------------------------------------------------
+      1  TABLE ACCESS FULL DUAL (cr=3 pr=2 pw=0 time=0 us cost=2 size=2 card=1)
+
+
+Elapsed times include waiting on following events:
+  Event waited on                             Times   Max. Wait  Total Waited
+  ----------------------------------------   Waited  ----------  ------------
+  SQL*Net message to client                       2        0.00          0.00
+  db file sequential read                         2        0.00          0.00
+  SQL*Net message from client                     2        0.00          0.00
+********************************************************************************
+
+select c.value || '/' || d.instance_name || '_ora_' || a.spid || '.trc' trace
+  from v$process a, v$session b, v$parameter c, v$instance d
+ where a.addr = b.paddr
+   and b.audsid = userenv('sessionid')
+   and c.name = 'user_dump_dest'
+
+call     count       cpu    elapsed       disk      query    current        rows
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+Parse        1      0.00       0.00          0          0          0           0
+Execute      1      0.00       0.00          0          0          0           0
+Fetch        2      0.01       0.02          0          0          0           1
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+total        4      0.01       0.02          0          0          0           1
+
+Misses in library cache during parse: 0
+Optimizer mode: ALL_ROWS
+Parsing user id: 92  
+
+Rows     Row Source Operation
+-------  ---------------------------------------------------
+      1  HASH JOIN  (cr=0 pr=0 pw=0 time=0 us cost=1 size=2324 card=1)
+      1   NESTED LOOPS  (cr=0 pr=0 pw=0 time=0 us cost=1 size=2280 card=1)
+     30    NESTED LOOPS  (cr=0 pr=0 pw=0 time=1218 us cost=1 size=2211 card=1)
+     30     MERGE JOIN CARTESIAN (cr=0 pr=0 pw=0 time=319 us cost=1 size=2198 card=1)
+      1      MERGE JOIN CARTESIAN (cr=0 pr=0 pw=0 time=0 us cost=1 size=2172 card=1)
+      1       MERGE JOIN CARTESIAN (cr=0 pr=0 pw=0 time=0 us cost=1 size=2149 card=1)
+      1        HASH JOIN  (cr=0 pr=0 pw=0 time=0 us cost=1 size=2149 card=1)
+      1         MERGE JOIN CARTESIAN (cr=0 pr=0 pw=0 time=0 us cost=0 size=115 card=1)
+      1          FIXED TABLE FULL X$KVIT (cr=0 pr=0 pw=0 time=0 us cost=0 size=34 card=1)
+      1          BUFFER SORT (cr=0 pr=0 pw=0 time=0 us cost=0 size=81 card=1)
+      1           FIXED TABLE FULL X$KSPPI (cr=0 pr=0 pw=0 time=0 us cost=0 size=81 card=1)
+   2399         FIXED TABLE FULL X$KSPPCV (cr=0 pr=0 pw=0 time=11485 us cost=0 size=203400 card=100)
+      1        BUFFER SORT (cr=0 pr=0 pw=0 time=0 us cost=1 size=0 card=100)
+      1         FIXED TABLE FULL X$QUIESCE (cr=0 pr=0 pw=0 time=0 us cost=0 size=0 card=100)
+      1       BUFFER SORT (cr=0 pr=0 pw=0 time=0 us cost=1 size=23 card=1)
+      1        FIXED TABLE FULL X$KSUXSINST (cr=0 pr=0 pw=0 time=0 us cost=0 size=23 card=1)
+     30      BUFFER SORT (cr=0 pr=0 pw=0 time=116 us cost=1 size=2600 card=100)
+     30       FIXED TABLE FULL X$KSLWT (cr=0 pr=0 pw=0 time=116 us cost=0 size=2600 card=100)
+     30     FIXED TABLE FIXED INDEX X$KSLED (ind:2) (cr=0 pr=0 pw=0 time=0 us cost=0 size=13 card=1)
+      1    FIXED TABLE FIXED INDEX X$KSUSE (ind:1) (cr=0 pr=0 pw=0 time=0 us cost=0 size=69 card=1)
+     33   FIXED TABLE FULL X$KSUPR (cr=0 pr=0 pw=0 time=160 us cost=0 size=44 card=1)
+
+
+Elapsed times include waiting on following events:
+  Event waited on                             Times   Max. Wait  Total Waited
+  ----------------------------------------   Waited  ----------  ------------
+  SQL*Net message to client                       2        0.00          0.00
+  asynch descriptor resize                        4        0.00          0.00
+  SQL*Net message from client                     2        0.00          0.00
+
+
+
+********************************************************************************
+
+OVERALL TOTALS FOR ALL NON-RECURSIVE STATEMENTS
+
+call     count       cpu    elapsed       disk      query    current        rows
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+Parse       13      0.01       0.02          0          0          0           0
+Execute     13      0.01       0.01          0          0          0           7
+Fetch        8      0.01       0.02         14         17          0          14
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+total       34      0.04       0.06         14         17          0          21
+
+Misses in library cache during parse: 4
+
+Elapsed times include waiting on following events:
+  Event waited on                             Times   Max. Wait  Total Waited
+  ----------------------------------------   Waited  ----------  ------------
+  SQL*Net message to client                      18        0.00          0.00
+  SQL*Net message from client                    18        9.00         11.50
+  db file sequential read                        14        0.00          0.00
+  asynch descriptor resize                        4        0.00          0.00
+  log file sync                                   1        0.00          0.00
+
+
+OVERALL TOTALS FOR ALL RECURSIVE STATEMENTS
+
+call     count       cpu    elapsed       disk      query    current        rows
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+Parse        3      0.00       0.00          0          0          0           0
+Execute      4      0.00       0.00          0          1          2           1
+Fetch       11      3.76       7.94      14827      14515         12          11
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+total       18      3.77       7.95      14827      14516         14          12
+
+Misses in library cache during parse: 1
+
+Elapsed times include waiting on following events:
+  Event waited on                             Times   Max. Wait  Total Waited
+  ----------------------------------------   Waited  ----------  ------------
+  asynch descriptor resize                        6        0.00          0.00
+  direct path read                              918        0.00          0.18
+  direct path write temp                        554        0.10          4.13
+  direct path read temp                          11        0.00          0.00
+
+   14  user  SQL statements in session.
+    2  internal SQL statements in session.
+   16  SQL statements in session.
+********************************************************************************
+Trace file: /home/ora11gr2/app/ora11gr2/diag/rdbms/orcl/orcl/trace/orcl_ora_12187.trc
+Trace file compatibility: 11.1.0.7
+Sort options: default
+
+       5  sessions in tracefile.
+      32  user  SQL statements in trace file.
+       2  internal SQL statements in trace file.
+      16  SQL statements in trace file.
+      10  unique SQL statements in trace file.
+    1999  lines in trace file.
+      38  elapsed seconds in trace file.
+
+

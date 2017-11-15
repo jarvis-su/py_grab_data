@@ -1,0 +1,2 @@
+select * from t where flag1='N' and flag2='N'
+/

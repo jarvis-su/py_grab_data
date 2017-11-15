@@ -1,0 +1,110 @@
+ops$tkyte%ORA11GR2> create or replace function f( x in varchar2 ) return number
+  2  as
+  3  begin
+  4          dbms_application_info.set_client_info(userenv('client_info')+1 );
+  5          return length(x);
+  6  end;
+  7  /
+Function created.
+
+ops$tkyte%ORA11GR2> variable cpu number
+ops$tkyte%ORA11GR2> clear screen
+ops$tkyte%ORA11GR2> exec :cpu := dbms_utility.get_cpu_time; dbms_application_info.set_client_info(0);
+PL/SQL procedure successfully completed.
+
+ops$tkyte%ORA11GR2> set autotrace traceonly statistics;
+ops$tkyte%ORA11GR2> select owner, f(owner) from stage;
+71482 rows selected.
+ops$tkyte%ORA11GR2> set autotrace off
+ops$tkyte%ORA11GR2> select dbms_utility.get_cpu_time-:cpu cpu_hsecs, userenv('client_info') from dual;
+
+ CPU_HSECS USERENV('CLIENT_INFO')
+---------- ----------------------------------------------------------------
+        50 71482
+
+
+ops$tkyte%ORA11GR2> exec :cpu := dbms_utility.get_cpu_time; dbms_application_info.set_client_info(0);
+PL/SQL procedure successfully completed.
+
+ops$tkyte%ORA11GR2> set autotrace traceonly statistics;
+ops$tkyte%ORA11GR2> select owner, (select f(owner) from dual) f from stage;
+71482 rows selected.
+ops$tkyte%ORA11GR2> set autotrace off
+ops$tkyte%ORA11GR2> select dbms_utility.get_cpu_time-:cpu cpu_hsecs, userenv('client_info') from dual;
+
+ CPU_HSECS USERENV('CLIENT_INFO')
+---------- ----------------------------------------------------------------
+        22 64
+
+ops$tkyte%ORA11GR2> clear screen
+ops$tkyte%ORA11GR2> exec :cpu := dbms_utility.get_cpu_time; dbms_application_info.set_client_info(0);
+PL/SQL procedure successfully completed.
+ops$tkyte%ORA11GR2> set autotrace traceonly statistics;
+ops$tkyte%ORA11GR2> select owner, (select f(owner) from dual) f
+  2    from (select owner, rownum r from stage order by owner);
+71482 rows selected.
+ops$tkyte%ORA11GR2> set autotrace off
+ops$tkyte%ORA11GR2> select dbms_utility.get_cpu_time-:cpu cpu_hsecs, userenv('client_info') from dual;
+
+ CPU_HSECS USERENV('CLIENT_INFO')
+---------- ----------------------------------------------------------------
+        19 30
+
+ops$tkyte%ORA11GR2> create or replace function f( x in varchar2 ) return number
+  2  DETERMINISTIC
+  3  as
+  4  begin
+  5          dbms_application_info.set_client_info(userenv('client_info')+1 );
+  6          return length(x);
+  7  end;
+  8  /
+Function created.
+
+ops$tkyte%ORA11GR2> exec :cpu := dbms_utility.get_cpu_time; dbms_application_info.set_client_info(0);
+PL/SQL procedure successfully completed.
+ops$tkyte%ORA11GR2> set autotrace traceonly statistics;
+ops$tkyte%ORA11GR2> select owner, f(owner) from stage;
+71482 rows selected.
+ops$tkyte%ORA11GR2> set autotrace off
+ops$tkyte%ORA11GR2> select dbms_utility.get_cpu_time-:cpu cpu_hsecs, userenv('client_info') from dual;
+
+ CPU_HSECS USERENV('CLIENT_INFO')
+---------- ----------------------------------------------------------------
+        32 8179
+
+ops$tkyte%ORA11GR2> create or replace function f( x in varchar2 ) return number
+  2  RESULT_CACHE
+  3  as
+  4  begin
+  5          dbms_application_info.set_client_info(userenv('client_info')+1 );
+  6          return length(x);
+  7  end;
+  8  /
+Function created.
+
+ops$tkyte%ORA11GR2> clear screen
+ops$tkyte%ORA11GR2> exec :cpu := dbms_utility.get_cpu_time; dbms_application_info.set_client_info(0);
+PL/SQL procedure successfully completed.
+
+ops$tkyte%ORA11GR2> set autotrace traceonly statistics;
+ops$tkyte%ORA11GR2> select owner, f(owner) from stage;
+71482 rows selected.
+ops$tkyte%ORA11GR2> set autotrace off
+ops$tkyte%ORA11GR2> select dbms_utility.get_cpu_time-:cpu cpu_hsecs, userenv('client_info') from dual;
+ CPU_HSECS USERENV('CLIENT_INFO')
+---------- ----------------------------------------------------------------
+        23 30
+
+ops$tkyte%ORA11GR2> clear screen
+ops$tkyte%ORA11GR2> exec :cpu := dbms_utility.get_cpu_time; dbms_application_info.set_client_info(0);
+PL/SQL procedure successfully completed.
+
+ops$tkyte%ORA11GR2> set autotrace traceonly statistics;
+ops$tkyte%ORA11GR2> select owner, f(owner) from stage;
+71482 rows selected.
+ops$tkyte%ORA11GR2> set autotrace off
+ops$tkyte%ORA11GR2> select dbms_utility.get_cpu_time-:cpu cpu_hsecs, userenv('client_info') from dual;
+
+ CPU_HSECS USERENV('CLIENT_INFO')
+---------- ----------------------------------------------------------------
+        24 0
